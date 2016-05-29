@@ -3,7 +3,7 @@
     "name": "devbox-01",
     "hostname": "devbox-01.net",
     "box": "debian/jessie64",
-    "ram": 512,
+    "ram": 128,
     "vcpu": 1,
     "ssh_guest_port": 3710,
     "scripts": [
