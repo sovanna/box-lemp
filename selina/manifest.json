@@ -1,0 +1,22 @@
+[
+  {
+    "name": "devbox-01",
+    "hostname": "devbox-01.net",
+    "box": "debian/jessie64",
+    "ram": 512,
+    "vcpu": 1,
+    "ssh_guest_port": 3710,
+    "scripts": [
+      [
+        "setup.sh", []
+      ]
+    ],
+    "sync": [
+      {
+        "source": "../src",
+        "destination": "/vagrant_data"
+      }
+    ],
+    "private_ip_addr": "192.168.37.10"
+  }
+]
