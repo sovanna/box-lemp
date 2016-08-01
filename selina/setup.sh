@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-cd "/vagrant/scripts/"
+BASE_SCRIPTS="/vagrant/scripts"
+
+cd "$BASE_SCRIPTS/"
 
 # Useful func
 source "_lib.sh"
@@ -11,10 +13,15 @@ log "Update"
 apt-get update
 
 # Install default
-. bootstrap.sh
+source bootstrap.sh
 
-log "Cleanup"
-apt-get autoremove -y
+# Install redis
+source bootstrap_redis.sh $BASE_SCRIPTS "redis-master.conf"
+
+cd "$BASE_SCRIPTS/"
+
+# Install Supervisor
+source bootstrap_supervisor.sh $BASE_SCRIPTS "supervisor_katie-m.conf"
 
 # Install MySQL
 echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
@@ -22,17 +29,20 @@ echo "mysql-server mysql-server/root_password_again password root" | debconf-set
 package mysql-server
 
 # Install PHP
-. bootstrap_php.sh
+source bootstrap_php.sh
 
 # Setup Nginx
 log "Setup Nginx"
-. bootstrap_nginx.sh
+source bootstrap_nginx.sh $BASE_SCRIPTS
 
-cp "conf/nginx.conf" /etc/nginx/
+cp "$BASE_SCRIPTS/conf/nginx.conf" "/etc/nginx/"
+rm -f "/etc/nginx/conf.d/default.conf"
+cp "$BASE_SCRIPTS/conf/nginx.default.conf" "/etc/nginx/conf.d/"
 
-rm -f /etc/nginx/conf.d/*
-cp "conf/nginx.default.conf" /etc/nginx/conf.d/
+service nginx stop
+service nginx start
 
-service nginx restart
+service supervisor stop
+service supervisor start
 
 log "Setup complete!"

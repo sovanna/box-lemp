@@ -2,7 +2,7 @@
 
 source "_lib.sh"
 
-log "Install default package"
+log "--- Start: Install default package ---"
 
 package sudo
 package vim-nox
@@ -15,5 +15,9 @@ package fail2ban
 package htop
 package git
 package whois
-package language-pack-en
 package bc
+
+# clean a bit
+apt-get autoremove -y
+
+log "--- End: Install default package ---"
